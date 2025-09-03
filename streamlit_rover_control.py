@@ -1,8 +1,3 @@
-"""
-ESP32 Solar Car Control - Streamlit Web Interface
-Deploy this on Streamlit Cloud to control your ESP32 car remotely
-"""
-
 import streamlit as st
 import paho.mqtt.client as mqtt
 import json
@@ -14,6 +9,8 @@ import queue
 # MQTT Configuration
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
+MQTT_USERNAME = "Jivansh"
+MQTT_PASSWORD = "Jivanshkmms1512" 
 MQTT_TOPIC_COMMAND = "esp32car/command"
 MQTT_TOPIC_STATUS = "esp32car/status"
 
