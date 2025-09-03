@@ -194,7 +194,7 @@ with col1:
                 st.experimental_rerun()
     
     with button_cols2[1]:
-        if st.button("🛑 STOP", key="stop", help="Emergency stop"):
+        if st.button("STOP", key="stop", help="Emergency stop"):
             if st.session_state.mqtt_controller.send_command("STOP"):
                 st.success("Stop command sent!")
                 time.sleep(0.5)
