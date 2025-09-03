@@ -6,13 +6,13 @@ from datetime import datetime
 import threading
 import queue
 
-# MQTT Configuration
+# MQTT Configuration - Updated for ESP8266
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
-MQTT_USERNAME = "Jivansh"
+MQTT_USERNAME = "Jivansh"  # Same credentials work for both ESP32 and ESP8266
 MQTT_PASSWORD = "Jivanshkmms1512" 
-MQTT_TOPIC_COMMAND = "esp32car/command"
-MQTT_TOPIC_STATUS = "esp32car/status"
+MQTT_TOPIC_COMMAND = "esp8266car/command"  # Changed from esp32car to esp8266car
+MQTT_TOPIC_STATUS = "esp8266car/status"    # Changed from esp32car to esp8266car
 
 class MQTTController:
     def __init__(self):
@@ -42,6 +42,8 @@ class MQTTController:
     
     def connect(self):
         try:
+            # Set credentials for MQTT broker authentication
+            self.client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
             self.client.connect(MQTT_BROKER, MQTT_PORT, 60)
             self.client.loop_start()
             return True
@@ -81,9 +83,9 @@ class MQTTController:
 if 'mqtt_controller' not in st.session_state:
     st.session_state.mqtt_controller = MQTTController()
 
-# Page configuration
+# Page configuration - Updated for ESP8266
 st.set_page_config(
-    page_title="ESP32 Solar Car Control",
+    page_title="ESP8266 Solar Car Control",
     page_icon="🚗",
     layout="wide"
 )
@@ -129,10 +131,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Header
+# Header - Updated for ESP8266
 st.markdown("""
 <div class="main-header">
-    <h1>ESP32 Solar Car Remote Control</h1>
+    <h1>ESP8266 Solar Car Remote Control</h1>
     <p>Control your solar-powered 4-wheeler remotely via MQTT</p>
 </div>
 """, unsafe_allow_html=True)
@@ -229,12 +231,12 @@ with col2:
                 if st.session_state.mqtt_controller.last_status:
                     status = st.session_state.mqtt_controller.last_status
                     
-                    st.markdown("###Car Information")
+                    st.markdown("### 🚗 Car Information")
                     st.write(f"**Car ID:** `{status.get('car_id', 'Unknown')}`")
                     st.write(f"**Status:** {status.get('status', 'Unknown')}")
                     st.write(f"**Last Command:** `{status.get('command', 'None')}`")
                     
-                    st.markdown("###Connection Info")
+                    st.markdown("### 📡 Connection Info")
                     rssi = status.get('wifi_rssi', 0)
                     if rssi > -50:
                         signal_quality = "Excellent"
@@ -279,37 +281,37 @@ with col2:
         if st.session_state.mqtt_controller.last_status:
             status = st.session_state.mqtt_controller.last_status
             
-            st.markdown("###Car Information")
+            st.markdown("### 🚗 Car Information")
             st.json(status)
 
-# Footer
+# Footer - Updated for ESP8266
 st.divider()
 st.markdown("""
 <div style='text-align: center; color: #666; padding: 1rem;'>
-    <p>ESP32 Solar Car Control Interface | Built with Streamlit & MQTT</p>
-    <p>Make sure your ESP32 is powered on and connected to WiFi</p>
+    <p>ESP8266 Solar Car Control Interface | Built with Streamlit & MQTT</p>
+    <p>Make sure your ESP8266 is powered on and connected to WiFi</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Sidebar with instructions
+# Sidebar with instructions - Updated for ESP8266
 with st.sidebar:
-    st.header("Instructions")
+    st.header("📋 Instructions")
     
     st.markdown("""
-    ### Getting Started:
-    1. **Power on** your ESP32 solar car
+    ### 🚀 Getting Started:
+    1. **Power on** your ESP8266 solar car
     2. **Connect** the car to WiFi (it will create a hotspot if needed)
     3. Click **"Connect to Car"** in the main interface
     4. Use the **movement buttons** to control your car
     
-    ### Movement Controls:
+    ### 🎮 Movement Controls:
     - ⬆️ **Forward**: Move straight ahead
     - ⬇️ **Backward**: Move in reverse  
     - ⬅️ **Left**: Turn left (tank turn)
     - ➡️ **Right**: Turn right (tank turn)
     - 🛑 **Stop**: Emergency stop
     
-    ### Status Information:
+    ### 📊 Status Information:
     - **Signal Strength**: WiFi connection quality
     - **Uptime**: How long the car has been running
     - **Memory**: Available system memory
@@ -317,19 +319,30 @@ with st.sidebar:
     """)
     
     st.markdown("---")
-    st.markdown("###Solar Power Tips:")
+    st.markdown("### ☀️ Solar Power Tips:")
     st.markdown("""
     - Place the solar panel in direct sunlight
     - Monitor battery levels regularly
     - Use during daylight hours for best performance
+    - ESP8266 uses less power than ESP32
     """)
     
     st.markdown("---")
     st.markdown("### 🛠️ Troubleshooting:")
     st.markdown("""
-    - **Connection issues**: Check WiFi and restart ESP32
+    - **Connection issues**: Check WiFi and restart ESP8266
     - **No response**: Verify MQTT broker connection
     - **Slow response**: Check signal strength
+    - **Driver issues**: Install CH340 or CP2102 drivers
+    """)
+    
+    st.markdown("---")
+    st.markdown("### ⚡ ESP8266 Specific:")
+    st.markdown("""
+    - **Lower memory**: ~80KB RAM available
+    - **Single core**: May be slightly slower
+    - **Better power efficiency**: Longer battery life
+    - **Same WiFi performance**: Full 802.11n support
     """)
 
 # Auto-cleanup on page close
